@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, vehicles, maintenanceHistory, maintenanceReminders, notificationsLog } from "../drizzle/schema";
+import type { InsertVehicle, InsertMaintenanceRecord, InsertNotificationLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -85,4 +86,80 @@ export async function getUser(id: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updateUser(id: string, data: Partial<InsertUser>) {
+  const db = await getDb();
+  if (!db) return undefined;
+  await db.update(users).set(data).where(eq(users.id, id));
+  return getUser(id);
+}
+
+// Vehicle queries
+export async function getUserVehicles(userId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(vehicles).where(eq(vehicles.userId, userId));
+}
+
+export async function getVehicleById(vehicleId: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(vehicles).where(eq(vehicles.id, vehicleId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createVehicle(data: InsertVehicle) {
+  const db = await getDb();
+  if (!db) return undefined;
+  await db.insert(vehicles).values(data);
+  return data;
+}
+
+// Maintenance history queries
+export async function getVehicleMaintenanceHistory(vehicleId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(maintenanceHistory).where(eq(maintenanceHistory.vehicleId, vehicleId));
+}
+
+export async function createMaintenanceRecord(data: InsertMaintenanceRecord) {
+  const db = await getDb();
+  if (!db) return undefined;
+  await db.insert(maintenanceHistory).values(data);
+  return data;
+}
+
+// Maintenance reminders queries
+export async function getVehicleReminders(vehicleId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(maintenanceReminders).where(eq(maintenanceReminders.vehicleId, vehicleId));
+}
+
+export async function getPendingReminders() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(maintenanceReminders).where(eq(maintenanceReminders.status, "pending"));
+}
+
+// Subscription queries
+export async function getUserSubscription(userId: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+// Notifications log
+export async function logNotification(data: InsertNotificationLog) {
+  const db = await getDb();
+  if (!db) return undefined;
+  await db.insert(notificationsLog).values(data);
+  return data;
+}
