@@ -6,6 +6,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import VehicleDetail from "./pages/VehicleDetail";
+import AdminPanel from "./pages/AdminPanel";
+import MechanicPanel from "./pages/MechanicPanel";
 import { useAuth } from "./_core/hooks/useAuth";
 
 function Router() {
@@ -21,6 +24,9 @@ function Router() {
       <Route path="/dashboard">
         {isAuthenticated ? <Dashboard /> : <Home />}
       </Route>
+      <Route path="/vehicle/:id" component={VehicleDetail} />
+      <Route path="/admin" component={AdminPanel} />
+      <Route path="/mechanic" component={MechanicPanel} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
