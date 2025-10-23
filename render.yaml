@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: troca-certa-api
+    env: node
+    plan: standard
+    buildCommand: pnpm install && pnpm db:push && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: TWILIO_WHATSAPP_NUMBER
+        sync: false
+      - key: BUILT_IN_FORGE_API_KEY
+        sync: false
+      - key: BUILT_IN_FORGE_API_URL
+        sync: false
+      - key: VITE_APP_ID
+        sync: false
+      - key: OAUTH_SERVER_URL
+        sync: false
+      - key: VITE_OAUTH_PORTAL_URL
+        sync: false
+      - key: VITE_APP_TITLE
+        sync: false
+      - key: VITE_APP_LOGO
+        sync: false
+      - key: OWNER_NAME
+        sync: false
+      - key: OWNER_OPEN_ID
+        sync: false
+      - key: VITE_API_URL
+        sync: false
+      - key: VITE_APP_URL
+        sync: false
+
